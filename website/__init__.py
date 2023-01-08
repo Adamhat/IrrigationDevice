@@ -22,8 +22,6 @@ def create_app():
     from .models import User, Note
 
     with app.app_context():
-        if not path.exists('website/' + DB_NAME): # Important to check if the database exists before making it so we don't remove all the data if the server ever restarts
-            db.create_all()
-            print('Created Database!')
+        db.create_all() # automaticly checks to see if database exists before making one.
 
     return app
