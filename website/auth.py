@@ -36,3 +36,4 @@ def sign_up():
             pass
 
     return render_template("sign_up.html")
+    

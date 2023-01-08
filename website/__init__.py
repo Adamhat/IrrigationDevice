@@ -25,3 +25,4 @@ def create_app():
         db.create_all() # automaticly checks to see if database exists before making one.
 
     return app
+    
