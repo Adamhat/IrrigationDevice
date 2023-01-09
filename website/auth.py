@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash
+from .models import User
 
 # This file is where we store the login information if need be
 auth = Blueprint('auth', __name__)
