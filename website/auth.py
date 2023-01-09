@@ -4,9 +4,9 @@ from .models import User
 # This file is where we store the login information if need be
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login', methods=['GET', 'POST'])
-def login():
-    return render_template("login.html")
+@auth.route('/alerts', methods=['GET', 'POST'])
+def alerts():
+    return render_template("alerts.html")
     
 @auth.route('/logout')
 def logout():
