@@ -14,3 +14,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     firstName = db.Column(db.String(150))
     notes = db.relationship('Note')
+
+class Alert(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True) # Unique = True means you cannot store the same email twice. The (150) means the email cannot be above 150 char.
+    

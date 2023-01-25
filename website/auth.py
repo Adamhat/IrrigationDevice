@@ -1,11 +1,30 @@
 from flask import Blueprint, render_template, request, flash
-from .models import User
+from .models import User, Alert
+from . import db
 
 # This file is where we store the login information if need be
 auth = Blueprint('auth', __name__)
 
 @auth.route('/alerts', methods=['GET', 'POST'])
 def alerts():
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        user = Alert.query.filter_by(email=email).first()
+        
+        if user:
+            flash('Email already registered for alerts.', category='error')
+            pass
+        elif len(email) < 3:
+            flash('Email must be greater then 3 characters.', category='error')
+            pass
+        else:
+            new_user = Alert(email=email)
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Successfully signed up for alerts!.', category='success')
+            pass
+
     return render_template("alerts.html")
     
 @auth.route('/logout')
