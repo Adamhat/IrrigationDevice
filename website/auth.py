@@ -22,7 +22,7 @@ def alerts():
             new_user = Alert(email=email)
             db.session.add(new_user)
             db.session.commit()
-            flash('Successfully signed up for alerts!.', category='success')
+            flash('Successfully signed up for alerts!', category='success')
             pass
 
     return render_template("alerts.html")

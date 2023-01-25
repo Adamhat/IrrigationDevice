@@ -6,4 +6,8 @@ views = Blueprint('views', __name__)
 @views.route('home') 
 def home(): # Whenever we access the main page of our website, whatever is in home will run
     return render_template("home.html")
+
+@views.route('help') 
+def help():
+    return render_template("help.html")
     
