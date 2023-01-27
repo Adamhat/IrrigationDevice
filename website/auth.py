@@ -1,6 +1,9 @@
+import os
+import smtplib, ssl
 from flask import Blueprint, render_template, request, flash
 from .models import User, Alert
 from . import db
+from email.message import EmailMessage
 
 # This file is where we store the login information if need be
 auth = Blueprint('auth', __name__)
@@ -9,7 +12,6 @@ auth = Blueprint('auth', __name__)
 def alerts():
     if request.method == 'POST':
         email = request.form.get('email')
-
         user = Alert.query.filter_by(email=email).first()
         
         if user:
@@ -22,6 +24,20 @@ def alerts():
             new_user = Alert(email=email)
             db.session.add(new_user)
             db.session.commit()
+
+            msg = EmailMessage()
+            msg.set_content('Welcome to the Quechan Irrigation Device (1) alert system. An email will be sent to this inbox once the amount of water has exeded the aloted ammout.')
+            msg['Subject'] = 'Irrigation Alerts'
+            msg['From'] = 'quechan2023@outlook.com'
+            msg['To'] = email
+
+            context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+
+            with smtplib.SMTP('smtp.office365.com', port=587) as smtp:
+                smtp.starttls(context=context)
+                smtp.login('quechan2023@outlook.com', 'capstone2023')
+                smtp.send_message(msg)
+
             flash('Successfully signed up for alerts!', category='success')
             pass
 
