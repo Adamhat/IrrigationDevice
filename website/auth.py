@@ -26,7 +26,7 @@ def alerts():
             db.session.commit()
 
             msg = EmailMessage()
-            msg.set_content('Welcome to the Quechan Irrigation Device (1) alert system. An email will be sent to this inbox once the amount of water has exeded the aloted ammout.')
+            msg.set_content('Welcome to the Quechan Irrigation Device (1) alert system. An email will be sent to this inbox once the amount of water has exceeded the allotted amount.')
             msg['Subject'] = 'Irrigation Alerts'
             msg['From'] = 'quechan2023@outlook.com'
             msg['To'] = email
