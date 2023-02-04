@@ -8,6 +8,13 @@ class Note(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now()) # Automaticlly grabs date and time and stores it within the database.
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # Assosiate the data with a user
 
+class Water(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime(timezone=True), default=func.now())
+    flowRate = db.Column(db.Float)
+    crossSection = db.Column(db.Float)
+    volume = db.Column(db.Float)
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True) # A primary key basically means that it will generate a value unique to a specified user
     email = db.Column(db.String(150), unique=True) # Unique = True means you cannot store the same email twice. The (150) means the email cannot be above 150 char.
@@ -17,5 +24,5 @@ class User(db.Model, UserMixin):
 
 class Alert(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True) # Unique = True means you cannot store the same email twice. The (150) means the email cannot be above 150 char.
+    email = db.Column(db.String(150), unique=True)
     

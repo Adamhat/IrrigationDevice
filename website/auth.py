@@ -1,7 +1,7 @@
 import os
 import smtplib, ssl
 from flask import Blueprint, render_template, request, flash
-from .models import User, Alert
+from .models import User, Alert, Water
 from . import db
 from email.message import EmailMessage
 
@@ -42,6 +42,10 @@ def alerts():
             pass
 
     return render_template("alerts.html")
+
+@auth.route('/data')
+def data():
+    return render_template("data.html")
     
 @auth.route('/logout')
 def logout():
