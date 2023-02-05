@@ -35,7 +35,8 @@ def alerts():
 
             with smtplib.SMTP('smtp.office365.com', port=587) as smtp:
                 smtp.starttls(context=context)
-                smtp.login('quechan2023@outlook.com', 'capstone2023')
+                # print("PASSWORD_QUECHAN_1 :", os.getenv('PASSWORD_QUECHAN_1')) 
+                smtp.login('quechan2023@outlook.com', os.getenv('PASSWORD_QUECHAN_1'))
                 smtp.send_message(msg)
 
             flash('Successfully signed up for alerts!', category='success')
@@ -45,7 +46,18 @@ def alerts():
 
 @auth.route('/data')
 def data():
-    return render_template("data.html")
+    id = Water.query.order_by(Water.id)
+    date = Water.query.order_by(Water.date)
+    flowRate = Water.query.order_by(Water.flowRate)
+    crossSection = Water.query.order_by(Water.crossSection)
+    volume = Water.query.order_by(Water.volume)
+
+    return render_template("data.html",
+    id=id,
+    date=date,
+    flowRate=flowRate,
+    crossSection=crossSection,
+    volume=volume)
     
 @auth.route('/logout')
 def logout():
