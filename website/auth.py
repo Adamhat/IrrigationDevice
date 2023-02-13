@@ -3,10 +3,20 @@ import smtplib, ssl
 from flask import Blueprint, render_template, request, flash
 from .models import User, Alert, Water
 from . import db
-from email.message import EmailMessage
+from email.mime.text import MIMEText
 
 # This file is where we store the login information if need be
 auth = Blueprint('auth', __name__)
+
+def send_email(subject, body, sender, recipients, password):
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = sender
+    msg['To'] = ', '.join(recipients)
+    smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    smtp_server.login(sender, password)
+    smtp_server.sendmail(sender, recipients, msg.as_string())
+    smtp_server.quit()
 
 @auth.route('/alerts', methods=['GET', 'POST'])
 def alerts():
@@ -25,19 +35,12 @@ def alerts():
             db.session.add(new_user)
             db.session.commit()
 
-            msg = EmailMessage()
-            msg.set_content('Welcome to the Quechan Irrigation Device (1) alert system. An email will be sent to this inbox once the amount of water has exceeded the allotted amount.')
-            msg['Subject'] = 'Irrigation Alerts'
-            msg['From'] = 'quechan2023@outlook.com'
-            msg['To'] = email
-
-            context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-
-            with smtplib.SMTP('smtp.office365.com', port=587) as smtp:
-                smtp.starttls(context=context)
-                # print("PASSWORD_QUECHAN_1 :", os.getenv('PASSWORD_QUECHAN_1')) 
-                smtp.login('quechan2023@outlook.com', os.getenv('PASSWORD_QUECHAN_1'))
-                smtp.send_message(msg)
+            subject = "Irrigation Alerts"
+            body = "Welcome to the Quechan Irrigation Device (1) alert system. An email will be sent to this inbox once the amount of water has exceeded the allotted amount."
+            sender = "quechan2023alerts@gmail.com"
+            recipients = email
+            password = os.getenv("PASSWORD_QUECHAN_1")
+            send_email(subject, body, sender, recipients, password)
 
             flash('Successfully signed up for alerts!', category='success')
             pass
