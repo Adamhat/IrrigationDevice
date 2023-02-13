@@ -12,7 +12,7 @@ def send_email(subject, body, sender, recipients, password):
     msg = MIMEText(body)
     msg['Subject'] = subject
     msg['From'] = sender
-    msg['To'] = ', '.join(recipients)
+    msg['To'] = recipients
     smtp_server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     smtp_server.login(sender, password)
     smtp_server.sendmail(sender, recipients, msg.as_string())
@@ -39,8 +39,8 @@ def alerts():
             body = "Welcome to the Quechan Irrigation Device (1) alert system. An email will be sent to this inbox once the amount of water has exceeded the allotted amount."
             sender = "quechan2023alerts@gmail.com"
             recipients = email
-            password = os.getenv("PASSWORD_QUECHAN_1")
-            send_email(subject, body, sender, recipients, password)
+            password = os.getenv("PASSWORD_QUECHAN_2")
+            send_email(subject, body, sender, email, password)
 
             flash('Successfully signed up for alerts!', category='success')
             pass
@@ -91,4 +91,3 @@ def sign_up():
             pass
 
     return render_template("sign_up.html")
-    
