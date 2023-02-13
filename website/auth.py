@@ -1,6 +1,6 @@
 import os
 import smtplib, ssl
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, jsonify
 from .models import User, Alert, Water
 from . import db
 from email.mime.text import MIMEText
@@ -46,6 +46,19 @@ def alerts():
             pass
 
     return render_template("alerts.html")
+
+@auth.route('/data', methods=['POST'])
+def recieve_data():
+    data = request.get_json()
+    flowRate = data['FlowRate']
+    volume = data['Volume']
+    updateTable = Water(flowRate=flowRate,volume=volume)
+    db.session.add(updateTable)
+    db.session.commit()
+    
+    return jsonify({'result' : 'Success', 
+                    'flowRate' : flowRate, 
+                    'volume' : volume})
 
 @auth.route('/data')
 def data():
