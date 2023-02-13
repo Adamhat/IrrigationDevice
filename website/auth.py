@@ -40,7 +40,7 @@ def alerts():
             sender = "quechan2023alerts@gmail.com"
             recipients = email
             password = os.getenv("PASSWORD_QUECHAN_2")
-            send_email(subject, body, sender, email, password)
+            send_email(subject, body, sender, recipients, password)
 
             flash('Successfully signed up for alerts!', category='success')
             pass
