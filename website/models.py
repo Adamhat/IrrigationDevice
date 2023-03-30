@@ -28,7 +28,7 @@ class Alert(db.Model, UserMixin):
 
 class Options(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    channelWidth = db.Column(db.String(150), unique=True)
-    channelFloor = db.Column(db.String(150), unique=True)
-    channelHight = db.Column(db.String(150), unique=True)
+    channelWidth = db.Column(db.String(150))
+    channelFloor = db.Column(db.String(150))
+    channelHight = db.Column(db.String(150))
     

@@ -1,7 +1,7 @@
 import os
 import smtplib, ssl
 from flask import Blueprint, render_template, request, flash, jsonify
-from .models import User, Alert, Water
+from .models import User, Alert, Water, Options
 from . import db
 from email.mime.text import MIMEText
 
@@ -31,8 +31,8 @@ def alerts():
             flash('Email must be greater then 3 characters.', category='error')
             pass
         else:
-            new_user = Alert(email=email)
-            db.session.add(new_user)
+            newUser = Alert(email=email)
+            db.session.add(newUser)
             db.session.commit()
 
             subject = "Irrigation Alerts"
@@ -52,7 +52,7 @@ def recieve_data():
     data = request.get_json()
     flowRate = data['FlowRate']
     volume = data['Volume']
-    updateTable = Water(flowRate=flowRate,volume=volume)
+    updateTable = Water(flowRate=flowRate, volume=volume)
     db.session.add(updateTable)
     db.session.commit()
     
@@ -82,7 +82,10 @@ def options():
         channelFloor = request.form.get('channelFloor')
         channelHight = request.form.get('channelHight')
 
-        if float(channelWidth) <= 0:
+        if len(channelWidth) == 0 or len(channelFloor) == 0 or len(channelHight) == 0:
+            flash('Each option must contain a value.', category='error')
+            pass
+        elif float(channelWidth) <= 0:
             flash('Channel Surface Width must be greater then 0.', category='error')
             pass
         elif float(channelFloor) <= 0:
@@ -92,10 +95,12 @@ def options():
             flash('Channel Hight must be greater then 0.', category='error')
             pass
         else:
-            flash('Successfully set options!.', category='success')
-            flash(channelWidth, category='success')
-            flash(channelFloor, category='success')
-            flash(channelHight, category='success')
+            updateTable = Options(channelWidth=channelWidth, channelFloor=channelFloor, channelHight=channelHight)
+            db.session.add(updateTable)
+            db.session.commit()
+
+            mostRecentOption = Options.query.order_by(Options.id.desc()).first()
+            flash(f"Channel width: {mostRecentOption.channelWidth}, Channel floor: {mostRecentOption.channelFloor}, Channel height: {mostRecentOption.channelHight}", category="success")
             pass
 
     return render_template("options.html")
