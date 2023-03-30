@@ -74,6 +74,31 @@ def data():
     flowRate=flowRate,
     crossSection=crossSection,
     volume=volume)
+
+@auth.route('/options', methods=['GET', 'POST'])
+def options():
+    if request.method == 'POST':
+        channelWidth = request.form.get('channelWidth')
+        channelFloor = request.form.get('channelFloor')
+        channelHight = request.form.get('channelHight')
+
+        if float(channelWidth) <= 0:
+            flash('Channel Surface Width must be greater then 0.', category='error')
+            pass
+        elif float(channelFloor) <= 0:
+            flash('Channel Floor Width must be greater then 0.', category='error')
+            pass
+        elif float(channelHight) <= 0:
+            flash('Channel Hight must be greater then 0.', category='error')
+            pass
+        else:
+            flash('Successfully set options!.', category='success')
+            flash(channelWidth, category='success')
+            flash(channelFloor, category='success')
+            flash(channelHight, category='success')
+            pass
+
+    return render_template("options.html")
     
 @auth.route('/logout')
 def logout():

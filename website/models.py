@@ -25,4 +25,10 @@ class User(db.Model, UserMixin):
 class Alert(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
+
+class Options(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    channelWidth = db.Column(db.String(150), unique=True)
+    channelFloor = db.Column(db.String(150), unique=True)
+    channelHight = db.Column(db.String(150), unique=True)
     

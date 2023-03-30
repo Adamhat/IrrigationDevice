@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block title %}IrrigationDevice -
+Options{%endblock%}
+<!-- The text in this line of code changes the internet tab name -->
+
+{% block content %}
+<br />
+<h1 align="center">Options</h1>
+<br />
+<form method="POST">
+  <div class="form-group">
+    <label for="channelWidth"
+      >Channel Surface Width - Width of the channel section at the free
+      surface.</label
+    >
+    <input
+      type="number"
+      step="0.01"
+      class="form-control"
+      id="channelWidth"
+      name="channelWidth"
+      placeholder="Enter Channel Surface Width"
+    />
+  </div>
+  <div class="form-group">
+    <label for="channelFloor"
+      >Channel Floor Width - Width of the channel section at the surface
+      floor.</label
+    >
+    <input
+      type="number"
+      step="0.01"
+      class="form-control"
+      id="channelFloor"
+      name="channelFloor"
+      placeholder="Enter Channel Floor Width"
+    />
+  </div>
+  <div class="form-group">
+    <label for="channelHight"
+      >Channel Hight - The vertical distance from the lowest point of the
+      channel section to the free surface.</label
+    >
+    <input
+      type="number"
+      step="0.01"
+      class="form-control"
+      id="channelHight"
+      name="channelHight"
+      placeholder="Enter Channel Hight"
+    />
+  </div>
+  <br />
+  <!-- Break Line -->
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
