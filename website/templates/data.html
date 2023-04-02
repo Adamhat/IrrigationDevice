@@ -10,12 +10,14 @@
     <td><b>Date/Time</b></td>
     <td><b>Flow Rate</b></td>
     <td><b>Volume</b></td>
+    <td><b>Channel Area</b></td>
   </tr>
   {% for data in id %}
   <tr>
     <td>{{ data.date }}</td>
     <td>{{ data.flowRate }}</td>
     <td>{{ data.volume }}</td>
+    <td>{{ data.channelArea }}</td>
   </tr>
   {% endfor %}
 </table>

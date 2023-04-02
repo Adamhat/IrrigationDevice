@@ -14,6 +14,7 @@ class Water(db.Model):
     flowRate = db.Column(db.Float)
     crossSection = db.Column(db.Float)
     volume = db.Column(db.Float)
+    channelArea = db.Column(db.Float)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True) # A primary key basically means that it will generate a value unique to a specified user

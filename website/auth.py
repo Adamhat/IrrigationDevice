@@ -52,7 +52,11 @@ def recieve_data():
     data = request.get_json()
     flowRate = data['FlowRate']
     volume = data['Volume']
-    updateTable = Water(flowRate=flowRate, volume=volume)
+
+    mostRecentOption = Options.query.order_by(Options.id.desc()).first()
+    channelArea = ((float(mostRecentOption.channelFloor) + ((float(mostRecentOption.channelWidth) - float(mostRecentOption.channelFloor)) * float(mostRecentOption.channelHight))) * float(mostRecentOption.channelHight))
+
+    updateTable = Water(flowRate=flowRate, volume=volume, channelArea=channelArea)
     db.session.add(updateTable)
     db.session.commit()
     
@@ -67,13 +71,15 @@ def data():
     flowRate = Water.query.order_by(Water.flowRate)
     crossSection = Water.query.order_by(Water.crossSection)
     volume = Water.query.order_by(Water.volume)
+    channelArea = Water.query.order_by(Water.channelArea)
 
     return render_template("data.html",
     id=id,
     date=date,
     flowRate=flowRate,
     crossSection=crossSection,
-    volume=volume)
+    volume=volume,
+    channelArea=channelArea)
 
 @auth.route('/options', methods=['GET', 'POST'])
 def options():
