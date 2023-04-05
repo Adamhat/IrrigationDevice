@@ -86,29 +86,37 @@ def data():
 @auth.route('/options', methods=['GET', 'POST'])
 def options():
     if request.method == 'POST':
-        channelWidth = request.form.get('channelWidth')
-        channelFloor = request.form.get('channelFloor')
-        channelHight = request.form.get('channelHight')
+        if request.form['submitButton'] == 'submitOptions':
+            channelWidth = request.form.get('channelWidth')
+            channelFloor = request.form.get('channelFloor')
+            channelHight = request.form.get('channelHight')
 
-        if len(channelWidth) == 0 or len(channelFloor) == 0 or len(channelHight) == 0:
-            flash('Each option must contain a value.', category='error')
-            pass
-        elif float(channelWidth) <= 0:
-            flash('Channel Surface Width must be greater then 0.', category='error')
-            pass
-        elif float(channelFloor) <= 0:
-            flash('Channel Floor Width must be greater then 0.', category='error')
-            pass
-        elif float(channelHight) <= 0:
-            flash('Channel Hight must be greater then 0.', category='error')
+            if len(channelWidth) == 0 or len(channelFloor) == 0 or len(channelHight) == 0:
+                flash('Each option must contain a value.', category='error')
+                pass
+            elif float(channelWidth) <= 0:
+                flash('Channel Surface Width must be greater then 0.', category='error')
+                pass
+            elif float(channelFloor) <= 0:
+                flash('Channel Floor Width must be greater then 0.', category='error')
+                pass
+            elif float(channelHight) <= 0:
+                flash('Channel Hight must be greater then 0.', category='error')
+                pass
+            else:
+                updateTable = Options(channelWidth=channelWidth, channelFloor=channelFloor, channelHight=channelHight)
+                db.session.add(updateTable)
+                db.session.commit()
+
+                mostRecentOption = Options.query.order_by(Options.id.desc()).first()
+                flash(f"Channel width: {mostRecentOption.channelWidth}, Channel floor: {mostRecentOption.channelFloor}, Channel height: {mostRecentOption.channelHight}", category="success")
+                pass
+        elif request.form['submitButton'] == 'deleteData':
+            Water.query.delete()
+            db.session.commit()
+            flash('All data successfully cleared! Re-enter options to continue recieving data.', category='success')
             pass
         else:
-            updateTable = Options(channelWidth=channelWidth, channelFloor=channelFloor, channelHight=channelHight)
-            db.session.add(updateTable)
-            db.session.commit()
-
-            mostRecentOption = Options.query.order_by(Options.id.desc()).first()
-            flash(f"Channel width: {mostRecentOption.channelWidth}, Channel floor: {mostRecentOption.channelFloor}, Channel height: {mostRecentOption.channelHight}", category="success")
             pass
 
     return render_template("options.html")
