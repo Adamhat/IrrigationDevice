@@ -25,7 +25,9 @@ def alerts():
         user = Alert.query.filter_by(email=email).first()
         
         if user:
-            flash('Email already registered for alerts.', category='error')
+            flash('Email already registered for alerts. Email removed list.', category='success')
+            db.session.delete(user)
+            db.session.commit()
             pass
         elif len(email) < 3:
             flash('Email must be greater then 3 characters.', category='error')
