@@ -1,6 +1,9 @@
 import os
 import smtplib, ssl
-from flask import Blueprint, render_template, request, flash, jsonify
+import pandas as pd
+import io
+import xlsxwriter
+from flask import Blueprint, Response, Flask, render_template, request, flash, jsonify
 from .models import User, Alert, Water, Options
 from . import db
 from email.mime.text import MIMEText
@@ -111,6 +114,31 @@ def options():
                 mostRecentOption = Options.query.order_by(Options.id.desc()).first()
                 flash(f"Channel width: {mostRecentOption.channelWidth}, Channel floor: {mostRecentOption.channelFloor}, Channel height: {mostRecentOption.channelHight}", category="success")
                 pass
+        elif request.form['submitButton'] == 'excelExport':
+            data = Water.query.with_entities(Water.date, Water.volume, Water.flowRate).all()
+            df = pd.DataFrame(data, columns=['date', 'volume', 'flowRate'])
+            output = io.BytesIO()
+            workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+            worksheet = workbook.add_worksheet('Data')
+            header_format = workbook.add_format({'bold': True})
+            date_format = workbook.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'})
+            headers = ['Date', 'Volume', 'Flow Rate']
+            
+            for col, header in enumerate(headers):
+                worksheet.write(0, col, header, header_format)
+            for row, data_row in enumerate(data):
+                for col, data_col in enumerate(data_row):
+                    if col == 0:
+                        worksheet.write(row+1, col, data_col, date_format)
+                    else:
+                        worksheet.write(row+1, col, data_col)
+            workbook.close()
+
+            response = Response(output.getvalue(),
+                                mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response.headers['Content-Disposition'] = 'attachment; filename=data.xlsx'
+
+            return response
         elif request.form['submitButton'] == 'deleteData':
             Water.query.delete()
             db.session.commit()
